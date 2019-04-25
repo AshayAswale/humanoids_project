@@ -209,7 +209,7 @@ add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-# ## Test arm navigation
-# add_executable(valve_grasp src/valve_grasp.cpp)
-# add_dependencies(valve_grasp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-# target_link_libraries(valve_grasp  ${catkin_LIBRARIES} ${PROJECT_NAME})
+## Test arm navigation
+add_executable(valve_opener src/valve_opener.cpp)
+add_dependencies(valve_opener ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(valve_opener  ${catkin_LIBRARIES} ${PROJECT_NAME})

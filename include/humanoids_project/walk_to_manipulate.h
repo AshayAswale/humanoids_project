@@ -4,16 +4,21 @@
 #include "ros/ros.h"
 #include <geometry_msgs/PoseStamped.h>
 
+#include <tough_footstep/robot_walker.h>
+
 class WalkToManipulate
 {
 private:
-    /* data */
+  RobotWalker* walking_controller_;
+  RobotDescription* rd_;
+  RobotStateInformer* state_informer_;
+
 public:
-    WalkToManipulate(/* args */);
-    ~WalkToManipulate();
-    void modifyGoalForWalking(geometry_msgs::PoseStamped& goal_walk);
-    bool walkRobot(const geometry_msgs::PoseStamped& goal_walk);
-    bool walkRobotForManipulation(const geometry_msgs::PoseStamped& goal_walk);
+  WalkToManipulate(ros::NodeHandle nh);
+  ~WalkToManipulate();
+  void modifyGoalForWalking(geometry_msgs::PoseStamped& goal_walk);
+  bool walkRobot(const geometry_msgs::PoseStamped& goal_walk);
+  bool walkRobotForManipulation(const geometry_msgs::PoseStamped& goal_walk);
 };
 
 #endif
