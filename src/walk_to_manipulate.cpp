@@ -31,24 +31,24 @@ bool WalkToManipulate::walkRobot(const geometry_msgs::PoseStamped& goal_walk)
 
 void WalkToManipulate::modifyGoalForWalking(geometry_msgs::PoseStamped& goal_walk)
 {
-  double yaw = tf::getYaw(goal_walk.pose.orientation);
-  // goal_walk.pose.position.x = goal_walk.pose.position.x - 0.5;
-  // goal_walk.pose.position.y = goal_walk.pose.position.y + 0.3;
+  // double yaw = tf::getYaw(goal_walk.pose.orientation);
+  goal_walk.pose.position.x = goal_walk.pose.position.x - 0.5;
+  goal_walk.pose.position.y = goal_walk.pose.position.y + 0.3;
 
-  goal_walk.pose.position.x += (-0.3 * (sin(yaw)) - 0.5 * (cos(yaw)));
-  goal_walk.pose.position.y -= (-0.3 * (cos(yaw)) + 0.5 * (sin(yaw)));
+  // goal_walk.pose.position.x += (-0.3 * (sin(yaw)) - 0.5 * (cos(yaw)));
+  // goal_walk.pose.position.y -= (-0.3 * (cos(yaw)) + 0.5 * (sin(yaw)));
 }
 
 bool WalkToManipulate::walkRobotForManipulation(const geometry_msgs::PoseStamped& valve_center_world)
 {
-  ROS_INFO_STREAM("Frame at walk: " << valve_center_world.header.frame_id);
   geometry_msgs::PoseStamped valve_center;
+  ROS_INFO_STREAM("Walk Goal World: "<<valve_center_world);
   valve_center.header.frame_id = rd_->getPelvisFrame();
   state_informer_->transformPose(valve_center_world.pose, valve_center.pose, valve_center_world.header.frame_id,
                                  rd_->getPelvisFrame());
-
+ROS_INFO_STREAM("Walk Goal Pelvis: "<<valve_center_world);
   ROS_INFO("Modifying Goal.");
   modifyGoalForWalking(valve_center);
-  ROS_INFO("Walking Robot");
+  ROS_INFO_STREAM("Walking Robot "<<valve_center);
   return walkRobot(valve_center);
 }

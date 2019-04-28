@@ -14,22 +14,24 @@ ManipulateValve::~ManipulateValve()
   delete gripper_controller_;
 }
 
-inline void ManipulateValve::reachToManipulate(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side, float time)
+void ManipulateValve::reachToManipulate(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side, float time)
 {
   geometry_msgs::Pose temp_pose;
   temp_pose = valve_center.pose;
-  temp_pose.position.z += radius;
+  // temp_pose.position.z += radius;
   temp_pose.position.x -= 0.05;
 
   arm_controller_->moveArmInTaskSpace(side, temp_pose, time);
   ros::Duration(time).sleep();
+  // track frame to wait till it is moving
+  // check the final position and return true or false
 
   temp_pose.position.x = valve_center.pose.position.x;
   arm_controller_->moveArmInTaskSpace(side, temp_pose, time);
   ros::Duration(time).sleep();
 }
 
-inline void ManipulateValve::rotateValve(const std::vector<ArmControlInterface::ArmTaskSpaceData> arm_data_vec_)
+void ManipulateValve::rotateValve(const std::vector<ArmControlInterface::ArmTaskSpaceData> arm_data_vec_)
 {
   arm_controller_->moveArmInTaskSpace(arm_data_vec_);
 }
@@ -43,10 +45,11 @@ std::vector<ArmControlInterface::ArmTaskSpaceData> ManipulateValve::getCircularT
   arm_data_.pose.position.x = valve_center.pose.position.x;
   float time_from_start = 0.0, time_step = 0.2;
 
+  // equal spacing
   for (double theta = 0; theta <= rotations; theta += 0.2)
   {
-    arm_data_.pose.position.z = valve_center.pose.position.z + radius * cos(theta);
-    arm_data_.pose.position.y = valve_center.pose.position.y - radius * sin(theta);
+    // arm_data_.pose.position.z = valve_center.pose.position.z + radius * cos(theta);
+    // arm_data_.pose.position.y = valve_center.pose.position.y - radius * sin(theta);
 
     tf::Quaternion quat_tf = tf::createQuaternionFromRPY(theta, 0, 0);
     tf::quaternionTFToMsg(quat_tf, quat);
@@ -72,11 +75,11 @@ std::vector<ArmControlInterface::ArmTaskSpaceData> ManipulateValve::getCircularT
   return arm_data_vec_;
 }
 
-inline void ManipulateValve::retractHand(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side, float time, const float rotations)
+void ManipulateValve::retractHand(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side, float time, const float rotations)
 {
   geometry_msgs::Pose temp_pose;
   temp_pose = valve_center.pose;
-  temp_pose.position.z -= radius;
+  // temp_pose.position.z -= radius;
   temp_pose.position.x -= 0.05;
 
   tf::Quaternion quat_tf = tf::createQuaternionFromRPY(rotations, 0, 0);
@@ -105,7 +108,6 @@ void ManipulateValve::operateValve(const geometry_msgs::PoseStamped valve_center
   std::vector<ArmControlInterface::ArmTaskSpaceData> arm_data_vec_ = getCircularTrajectoryVector(valve_center, radius);
   ROS_INFO("Rotating the valve");
   rotateValve(arm_data_vec_);
-  ROS_INFO_STREAM("First Point " << arm_data_vec_.front().pose.position);
   float time_for_traj = arm_data_vec_.back().time;
   ros::Duration(time_for_traj).sleep();
 
