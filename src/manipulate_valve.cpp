@@ -31,7 +31,7 @@ void ManipulateValve::reachToManipulate(const geometry_msgs::PoseStamped& valve_
   ros::Duration(time).sleep();
 }
 
-void ManipulateValve::rotateValve(const std::vector<ArmControlInterface::ArmTaskSpaceData> arm_data_vec_)
+void ManipulateValve::rotateValve(const std::vector<ArmControlInterface::ArmTaskSpaceData>& arm_data_vec_)
 {
   arm_controller_->moveArmInTaskSpace(arm_data_vec_);
 }
@@ -88,7 +88,7 @@ void ManipulateValve::retractHand(const geometry_msgs::PoseStamped& valve_center
   arm_controller_->moveArmInTaskSpace(side, temp_pose, time);
 }
 
-void ManipulateValve::operateValve(const geometry_msgs::PoseStamped valve_center_world, const float radius, RobotSide side, const float rotations)
+void ManipulateValve::operateValve(const geometry_msgs::PoseStamped& valve_center_world, const float radius, RobotSide side, const float rotations)
 {
 
   geometry_msgs::PoseStamped valve_center;

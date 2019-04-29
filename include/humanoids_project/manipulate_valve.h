@@ -20,10 +20,10 @@ private:
 public:
   ManipulateValve(ros::NodeHandle nh);
   ~ManipulateValve();
-  void operateValve(const geometry_msgs::PoseStamped valve_center, const float radius, RobotSide side = RobotSide::RIGHT, const float rotations = M_PI);
+  void operateValve(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side = RobotSide::RIGHT, const float rotations = M_PI);
   void reachToManipulate(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side = RobotSide::RIGHT, float time = 1.0f);
   void retractHand(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side = RobotSide::RIGHT, float time = 1.0f, const float rotations = M_PI);
-  void rotateValve(const std::vector<ArmControlInterface::ArmTaskSpaceData> arm_data_vec_);
+  void rotateValve(const std::vector<ArmControlInterface::ArmTaskSpaceData>& arm_data_vec_);
 };
 
 #endif

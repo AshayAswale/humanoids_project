@@ -31,23 +31,25 @@ int main(int argc, char **argv)
   ros::Subscriber subscribe = nh.subscribe("/clicked_point", 1000, goalMessageCB);
   ManipulateValve manipulate_valve(nh);
   WalkToManipulate walk_robot(nh);
-  ros::Rate loop_rate(10.0);
+  ROS_INFO("All configurations done!");
 
+  ros::Rate loop_rate(10.0);
   while (ros::ok() && !goal_available_)
   {
     loop_rate.sleep();
   }
+
   // valve_position.pose.position.z = 1.0;
-  geometry_msgs::PoseStamped valve_position_world;
-  valve_position_world = valve_position;
+  geometry_msgs::PoseStamped valve_position_world = valve_position;
   // valve_position_world.header.frame_id = rd_->getWorldFrame();
   // state_informer_->transformPose(valve_position.pose, valve_position_world.pose, valve_position.header.frame_id,
   //                                rd_->getWorldFrame());
+
   bool robot_walked = walk_robot.walkRobotForManipulation(valve_position_world);
 
   if(robot_walked)
   {
-  float radius = 0.16;
+  float radius = 0.15;
   manipulate_valve.operateValve(valve_position_world, radius);
 
   ros::Duration(5.0f).sleep();
