@@ -15,8 +15,12 @@ private:
   ArmControlInterface *arm_controller_;
   std::vector<ArmControlInterface::ArmTaskSpaceData> arm_data_vec_;
   GripperControlInterface* gripper_controller_;
+  // ros::Publisher *right_hand_msg_pub;
+  // std::vector<double> close_config{1.45, 1.45, 1.45, 0, 0, 0, 0, 0, 0};
+  // std_msgs::Float64MultiArray hand_msg_close;
 
-  std::vector<ArmControlInterface::ArmTaskSpaceData> getCircularTrajectoryVector(const geometry_msgs::PoseStamped valve_center, const float radius, RobotSide side = RobotSide::RIGHT, const float rotations = M_PI);
+  // void insertDataToMultiArray();
+  void getCircularTrajectoryVector(std::vector<ArmControlInterface::ArmTaskSpaceData>& arm_data_vec_, const geometry_msgs::PoseStamped valve_center, const float radius, RobotSide side = RobotSide::RIGHT, const float rotations = M_PI);
 public:
   ManipulateValve(ros::NodeHandle nh);
   ~ManipulateValve();
@@ -24,6 +28,7 @@ public:
   void reachToManipulate(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side = RobotSide::RIGHT, float time = 1.0f);
   void retractHand(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side = RobotSide::RIGHT, float time = 1.0f, const float rotations = M_PI);
   void rotateValve(const std::vector<ArmControlInterface::ArmTaskSpaceData>& arm_data_vec_);
+  void rotateValve(int joint_number,  float target_angle, RobotSide side = RobotSide::RIGHT, float time = 2.0f);
 };
 
 #endif

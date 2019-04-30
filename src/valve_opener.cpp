@@ -45,8 +45,8 @@ int main(int argc, char **argv)
   // state_informer_->transformPose(valve_position.pose, valve_position_world.pose, valve_position.header.frame_id,
   //                                rd_->getWorldFrame());
 
-  bool robot_walked = walk_robot.walkRobotForManipulation(valve_position_world);
-
+  // bool robot_walked = walk_robot.walkRobotForManipulation(valve_position_world);
+bool robot_walked = true;
   if(robot_walked)
   {
   float radius = 0.15;
