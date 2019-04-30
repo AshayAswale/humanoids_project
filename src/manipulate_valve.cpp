@@ -13,13 +13,14 @@ ManipulateValve::~ManipulateValve()
   delete arm_controller_;
   delete gripper_controller_;
 }
-void modifyPoseForIHMCFrame( geometry_msgs::PoseStamped& valve_center)
+void modifyPoseForIHMCFrame(geometry_msgs::PoseStamped& valve_center)
 {
-  // valve_center.pose.position.x += 0.038;
+  valve_center.pose.position.x -= 0.100;
   valve_center.pose.position.y += 0.017;
   valve_center.pose.position.z -= 0.087;
 }
-void ManipulateValve::reachToManipulate(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side, float time)
+void ManipulateValve::reachToManipulate(const geometry_msgs::PoseStamped& valve_center, const float radius,
+                                        RobotSide side, float time)
 {
   geometry_msgs::Pose temp_pose;
   temp_pose = valve_center.pose;
@@ -41,12 +42,14 @@ void ManipulateValve::rotateValve(const std::vector<ArmControlInterface::ArmTask
   arm_controller_->moveArmInTaskSpace(arm_data_vec_);
 }
 
-void ManipulateValve::rotateValve(int joint_number,  float target_angle, RobotSide side, float time)
+void ManipulateValve::rotateValve(int joint_number, float target_angle, RobotSide side, float time)
 {
   arm_controller_->moveArmJoint(side, joint_number, target_angle, time);
 }
 
-void ManipulateValve::getCircularTrajectoryVector(std::vector<ArmControlInterface::ArmTaskSpaceData>& arm_data_vec_, const geometry_msgs::PoseStamped valve_center, const float radius, RobotSide side, const float rotations)
+void ManipulateValve::getCircularTrajectoryVector(std::vector<ArmControlInterface::ArmTaskSpaceData>& arm_data_vec_,
+                                                  const geometry_msgs::PoseStamped valve_center, const float radius,
+                                                  RobotSide side, const float rotations)
 {
   geometry_msgs::Quaternion quat;
   quat.w = 1;
@@ -87,10 +90,10 @@ void ManipulateValve::getCircularTrajectoryVector(std::vector<ArmControlInterfac
   time_from_start += time_step;
   arm_data_.time = time_from_start;
   arm_data_vec_.push_back(arm_data_);
-
 }
 
-void ManipulateValve::retractHand(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side, float time, const float rotations)
+void ManipulateValve::retractHand(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side,
+                                  float time, const float rotations)
 {
   geometry_msgs::Pose temp_pose;
   temp_pose = valve_center.pose;
@@ -103,9 +106,9 @@ void ManipulateValve::retractHand(const geometry_msgs::PoseStamped& valve_center
   arm_controller_->moveArmInTaskSpace(side, temp_pose, time);
 }
 
-void ManipulateValve::operateValve(const geometry_msgs::PoseStamped& valve_center_world, const float radius, RobotSide side, const float rotations)
+void ManipulateValve::operateValve(const geometry_msgs::PoseStamped& valve_center_world, const float radius,
+                                   RobotSide side, const float rotations)
 {
-
   geometry_msgs::PoseStamped valve_center;
   valve_center.header.frame_id = rd_->getPelvisFrame();
   state_informer_->transformPose(valve_center_world.pose, valve_center.pose, valve_center_world.header.frame_id,
@@ -118,7 +121,7 @@ void ManipulateValve::operateValve(const geometry_msgs::PoseStamped& valve_cente
   gripper_controller_->openGripper(side);
   ROS_INFO("Reaching to manipulate.");
   reachToManipulate(valve_center, radius, side, time);
-  
+
   // ROS_INFO_STREAM("Closing Grippers  \n"<<hand_msg_close);
   gripper_controller_->closeFingers(side);
   // right_hand_msg_pub->publish(hand_msg_close);
@@ -130,11 +133,11 @@ void ManipulateValve::operateValve(const geometry_msgs::PoseStamped& valve_cente
   rotateValve(arm_data_vec_);
   float time_for_traj = arm_data_vec_.back().time;
   ros::Duration(time_for_traj).sleep();
-  
+
   // ROS_INFO("Rotating Valve");
   // rotateValve(6, M_PI);
   // ros::Duration(2.0).sleep();
-  
+
   ROS_INFO("Opening Grippers");
   gripper_controller_->openGripper(side);
   ros::Duration(time).sleep();

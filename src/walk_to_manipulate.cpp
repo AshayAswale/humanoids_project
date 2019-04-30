@@ -35,8 +35,8 @@ void WalkToManipulate::modifyGoalForWalking(geometry_msgs::PoseStamped& goal_wal
   // goal_walk.pose.position.x = goal_walk.pose.position.x - 0.5;
   // goal_walk.pose.position.y = goal_walk.pose.position.y + 0.3;
 
-  goal_walk.pose.position.x += (-0.3 * (sin(yaw)) - 0.5 * (cos(yaw)));
-  goal_walk.pose.position.y -= (-0.3 * (cos(yaw)) + 0.5 * (sin(yaw)));
+  goal_walk.pose.position.x += (-0.6 * (sin(yaw)) - 0.6 * (cos(yaw)));
+  goal_walk.pose.position.y -= (-0.6 * (cos(yaw)) + 0.6 * (sin(yaw)));
 }
 
 bool WalkToManipulate::walkRobotForManipulation(const geometry_msgs::PoseStamped& valve_center_world)
