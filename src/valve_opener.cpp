@@ -12,10 +12,10 @@ RobotDescription* rd_;
 void goalMessageCB(const geometry_msgs::Point& goal)
 {
   ROS_INFO_ONCE("Starting task");
-  // valve_position.pose.position = goal;
-  valve_position.pose.position.x = goal.z;
-  valve_position.pose.position.y = -goal.x;
-  valve_position.pose.position.z = -goal.y;
+  valve_position.pose.position = goal;
+  // valve_position.pose.position.x = goal.z;
+  // valve_position.pose.position.y = -goal.x;
+  // valve_position.pose.position.z = -goal.y;
 
   valve_position.pose.orientation.w = 1;
   valve_position.header.frame_id = TOUGH_COMMON_NAMES::ROBOT_HEAD_FRAME_TF;
@@ -34,7 +34,7 @@ int main(int argc, char** argv)
 
   ros::Subscriber subscribe = nh.subscribe("/valve_center", 1000, goalMessageCB);
   ManipulateValve manipulate_valve(nh);
-  WalkToManipulate walk_robot(nh);
+  // WalkToManipulate walk_robot(nh);
   ROS_INFO("All configurations done!");
 
   ros::Rate loop_rate(10.0);
@@ -50,19 +50,19 @@ int main(int argc, char** argv)
 
   ROS_INFO_STREAM("Valve in World frame: " << valve_position_world);
 
-  bool robot_walked = walk_robot.walkRobotForManipulation(valve_position_world);
+  // bool robot_walked = walk_robot.walkRobotForManipulation(valve_position_world);
   // bool robot_walked = true;
-  if (robot_walked)
-  {
+  // if (robot_walked)
+  // {
     float radius = 0.15;
     manipulate_valve.operateValve(valve_position_world, radius);
 
     ros::Duration(5.0f).sleep();
-  }
-  else
-  {
-    ROS_ERROR("Footstep Planning failed!");
-  }
+  // }
+  // else
+  // {
+  //   ROS_ERROR("Footstep Planning failed!");
+  // }
 
   return 0;
 }

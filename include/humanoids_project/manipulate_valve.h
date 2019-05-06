@@ -3,32 +3,36 @@
 
 #include "ros/ros.h"
 #include <geometry_msgs/PoseStamped.h>
+
 #include <tough_controller_interface/arm_control_interface.h>
 #include <tough_controller_interface/gripper_control_interface.h>
+#include <tough_controller_interface/wholebody_control_interface.h>
+#include <tough_moveit_planners/taskspace_planner.h>
 
 class ManipulateValve
 {
 private:
   RobotDescription* rd_;
   RobotStateInformer* state_informer_;
-  ArmControlInterface::ArmTaskSpaceData arm_data_;
   ArmControlInterface *arm_controller_;
-  std::vector<ArmControlInterface::ArmTaskSpaceData> arm_data_vec_;
   GripperControlInterface* gripper_controller_;
-  // ros::Publisher *right_hand_msg_pub;
-  // std::vector<double> close_config{1.45, 1.45, 1.45, 0, 0, 0, 0, 0, 0};
-  // std_msgs::Float64MultiArray hand_msg_close;
+  TaskspacePlanner* taskspace_planner_;
+  WholebodyControlInterface* wholebody_controller_;
+  ros::Duration time_for_exec;
 
   // void insertDataToMultiArray();
-  void getCircularTrajectoryVector(std::vector<ArmControlInterface::ArmTaskSpaceData>& arm_data_vec_, const geometry_msgs::PoseStamped valve_center, const float radius, RobotSide side = RobotSide::RIGHT, const float rotations = M_PI);
+  void getCircularTrajectoryVector(std::vector<geometry_msgs::Pose> &pose_vec, const geometry_msgs::PoseStamped valve_center, const float radius, RobotSide side = RobotSide::RIGHT, const float rotations = M_PI);
+
+  bool executePointTrajectory(geometry_msgs::PoseStamped& temp_pose, std::string planning_group,
+                              moveit_msgs::RobotTrajectory& robot_traj);
+
 public:
   ManipulateValve(ros::NodeHandle nh);
   ~ManipulateValve();
   void operateValve(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side = RobotSide::RIGHT, const float rotations = M_PI);
-  void reachToManipulate(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side = RobotSide::RIGHT, float time = 1.0f);
-  void retractHand(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side = RobotSide::RIGHT, float time = 1.0f, const float rotations = M_PI);
-  void rotateValve(const std::vector<ArmControlInterface::ArmTaskSpaceData>& arm_data_vec_);
-  void rotateValve(int joint_number,  float target_angle, RobotSide side = RobotSide::RIGHT, float time = 2.0f);
+  bool reachToManipulate(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side = RobotSide::RIGHT);
+  bool retractHand(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side = RobotSide::RIGHT, float time = 1.0f, const float rotations = M_PI);
+  double rotateValve(const std::vector<geometry_msgs::Pose>& pose_vec, RobotSide side);
 };
 
 #endif
