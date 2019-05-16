@@ -1,5 +1,5 @@
-#ifndef MANIPULATE_VALVE
-#define MANIPULATE_VALVE
+#ifndef PICK_BAG
+#define PICK_BAG
 
 #include "ros/ros.h"
 #include <geometry_msgs/PoseStamped.h>
@@ -9,7 +9,7 @@
 #include <tough_controller_interface/wholebody_control_interface.h>
 #include <tough_moveit_planners/taskspace_planner.h>
 
-class ManipulateValve
+class PickBag
 {
 private:
   RobotDescription* rd_;
@@ -27,14 +27,12 @@ private:
                               moveit_msgs::RobotTrajectory& robot_traj);
 
 public:
-  ManipulateValve(ros::NodeHandle nh);
-  ~ManipulateValve();
+  PickBag(ros::NodeHandle nh);
+  ~PickBag();
   void operateValve(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side = RobotSide::RIGHT, const float rotations = M_PI);
   bool reachToManipulate(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side = RobotSide::RIGHT);
   bool retractHand(const geometry_msgs::PoseStamped& valve_center, const float radius, RobotSide side = RobotSide::RIGHT, float time = 1.0f, const float rotations = M_PI);
   double rotateValve(const std::vector<geometry_msgs::Pose>& pose_vec, RobotSide side);
 };
-
-typedef boost::shared_ptr<ManipulateValve> ManipulateValvePtr;
 
 #endif
